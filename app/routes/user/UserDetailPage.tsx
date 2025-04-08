@@ -7,6 +7,7 @@ import { User } from "~/domain/model/user";
 import { useSubmit } from "react-router";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMemo, useState } from "react";
 
 export async function loader({ params, request }: Route.LoaderArgs) {
     const userId = Number(params.id);
@@ -45,6 +46,12 @@ export async function action({ request }: Route.ActionArgs) {
 
 // /usersを表示するページコンポーネント
 export default function UserDetailPage({ loaderData, actionData }: Route.ComponentProps) {
+    const [point, setPoint] = useState(0);
+    const calculatePoint = useMemo(() => {
+        const pointCalculationService = appInjector.resolve("pointCalculateService");
+        return pointCalculationService.calculatePoints(loaderData.user, { amount: point });
+    }, [point, loaderData.user]);
+
     const submit = useSubmit();
 
     const {
@@ -65,6 +72,17 @@ export default function UserDetailPage({ loaderData, actionData }: Route.Compone
             <h1 className="text-2xl font-bold mb-6">User Detail</h1>
             <div className="space-y-4">
                 <UserCard key={loaderData.user.id} user={loaderData.user} />
+
+                <div>
+                    <label htmlFor="point">ポイント</label>
+                    <input
+                        type="number"
+                        value={point}
+                        onChange={(e) => setPoint(Number(e.target.value))}
+                    />
+                    <p>計算結果: {calculatePoint}</p>
+                </div>
+
                 <form onSubmit={onSubmit}>
                     <span>{ }</span>
                     <input type="hidden" {...register("id")} />
