@@ -4,16 +4,13 @@ import type { ISubSystemDataGateway } from "../gateway/i_sub_system_data_gateway
 import type { UserInfo } from "../model/user_info";
 import type { IUserQueryRepository } from "../repository/i_user_query_repository";
 
-export class UserManagementFacade {
+export class UserInfoFacade {
 	constructor(
 		private userQueryRepository: IUserQueryRepository,
 		private subSystemDataGateway: ISubSystemDataGateway,
 	) {}
 
-	public static inject = [
-		"userQueryRepository",
-		"subSystemDataGateway",
-	] as const;
+	static inject = ["userQueryRepository", "subSystemDataGateway"] as const;
 
 	async getUserInfo(userId: number): Promise<UserInfo.UserInfo> {
 		const user = await this.userQueryRepository.findById(userId);
