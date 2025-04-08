@@ -153,23 +153,23 @@
 /app
 ├── domain/                     # ドメイン層: コアビジネスロジックとルール
 │   ├── model/                  #   - エンティティ、値オブジェクトなど
-│   │   └── User.ts             #     例: User エンティティ定義
-│   ├── repository/             #   - リポジトリインターフェース (Query/Command分離)。必ず分離する必要はない。その場合は、IUser_repository (Optional)
-│   │   ├── IUser_query_repository.ts     #     例: User データ取得用インターフェース
-│   │   └── IUser_command_repository.ts   #     例: User データ更新用インターフェース
-│   ├── gateway/                #   - 外部(サブシステム)アクセスインターフェース (Optional)
-│   │   └── ISub_system_data_gateway.ts #     例: サブシステムデータ操作インターフェース
+│   │   └── user.ts             #     例: User エンティティ定義
+│   ├── repository/             #   - リポジトリインターフェース (Query/Command分離)。必ず分離する必要はない。その場合は、i_user_repository (Optional。serviceやfacade等で必要になったら用意するといい。)
+│   │   ├── i_user_query_repository.ts     #     例: User データ取得用インターフェース
+│   │   └── i_user_command_repository.ts   #     例: User データ更新用インターフェース
+│   ├── gateway/                #   - 外部(サブシステム)アクセスインターフェース (Optional。serviceやfacade等で必要になったら用意するといい。)
+│   │   └── i_sub_system_data_gateway.ts #     例: サブシステムデータ操作インターフェース
 │   ├── service/                #   - ドメインサービス (複雑なビジネスロジック) (Optional)
-│   │   └── Point_calculation_service.ts #     例: ポイント計算ロジック
+│   │   └── point_calculation_service.ts #     例: ポイント計算ロジック
 │   └── facade/                 #   - ドメインファサード (ドメイン内連携調整) (Optional)
-│       └── User_management_facade.ts #     例: ユーザー関連の複雑な連携を扱う
+│       └── user_management_facade.ts #     例: ユーザー関連の複雑な連携を扱う
 │
 ├── application/              # アプリケーション層: ユースケース、アプリケーション固有ロジック
 │   ├── use_case/                #   - ユースケース
-│   │   └── Get_user_use_case.ts     #     例: ユーザー取得ユースケース
-│   │   └── Create_user_use_case.ts  #     例: ユーザー作成ユースケース
+│   │   └── get_user_use_case.ts     #     例: ユーザー取得ユースケース
+│   │   └── create_user_use_case.ts  #     例: ユーザー作成ユースケース
 │   └── dto/                    #   - データ転送オブジェクト (Optional。書く量が増えるので、あとで追加する方針でもいい)
-│       └── User_dto.ts          #     例: ユーザー情報転送用オブジェクト
+│       └── user_dto.ts          #     例: ユーザー情報転送用オブジェクト
 │
 ├── infrastructure/           # インフラストラクチャ層: 技術的詳細、外部連携実装
 │   ├── db/                     #   - Drizzle ORM 関連
@@ -177,12 +177,12 @@
 │   │   ├── client.ts           #     - Drizzle Client インスタンス化
 │   │   └── migrate.ts          #     - Drizzle マイグレーションスクリプト (Optional)
 │   ├── repository/             #   - リポジトリ実装 (Drizzle使用) 必ず分離する必要はない。その場合は、IUser_repository
-│   │   ├── Drizzle_user_query_repository.ts    #     - User取得リポジトリ実装
-│   │   └── Drizzle_user_command_repository.ts  #     - User更新リポジトリ実装
+│   │   ├── drizzle_user_query_repository.ts    #     - User取得リポジトリ実装
+│   │   └── drizzle_user_command_repository.ts  #     - User更新リポジトリ実装
 │   ├── gateway/                #   - ゲートウェイ実装 (外部API等連携) (Optional)
-│   │   └── Sub_system_data_api_adapter.ts   #     - サブシステムAPIアダプター実装
+│   │   └── sub_system_data_api_adapter.ts   #     - サブシステムAPIアダプター実装
 │   └── service/                #   - インフラ固有サービス実装 (Optional)
-│       └── Send_grid_email_service.ts #     - 例: Email送信サービス実装
+│       └── send_grid_email_service.ts #     - 例: Email送信サービス実装
 │
 ├── interface/                # インターフェースアダプター層: UI部品など
 │   └── component/              #   - 再利用可能なUIコンポーネント
