@@ -1,4 +1,4 @@
-import { appInjector } from "~/di";
+import { serverInjector } from "~/di/server_di";
 import { UserCard } from "./component/UserCard";
 import type { DBStorageContext } from "~/infrastructure/db/db_storage";
 import { db } from "~/infrastructure/db/db";
@@ -8,18 +8,19 @@ import { useSubmit } from "react-router";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMemo, useState } from "react";
+import { clientInjector } from "~/di/client_di";
 
 export async function loader({ params, request }: Route.LoaderArgs) {
     const userId = Number(params.id);
 
-    const dbStorage = appInjector.resolve("dbStorage");
+    const dbStorage = serverInjector.resolve("dbStorage");
     const dbContext: DBStorageContext = {
         request,
         db
     }
 
     const user = await dbStorage.run(dbContext, async () => {
-        const getUserUseCase = appInjector.resolve("user/GetUserUseCase")
+        const getUserUseCase = serverInjector.resolve("user/GetUserUseCase")
         return await getUserUseCase.execute(userId);
     })
 
@@ -27,6 +28,8 @@ export async function loader({ params, request }: Route.LoaderArgs) {
 }
 
 export async function action({ request }: Route.ActionArgs) {
+    console.log("action data", "hello");
+
     const data = await request.json();
 
     const parseResult = User.userSchema.safeParse(data)
@@ -35,8 +38,8 @@ export async function action({ request }: Route.ActionArgs) {
         return parseResult.error;
     }
 
-    await appInjector.resolve("dbStorage").run({ request, db }, async () => {
-        const updateUserUseCase = appInjector.resolve("user/UpdateUserUseCase")
+    await serverInjector.resolve("dbStorage").run({ request, db }, async () => {
+        const updateUserUseCase = serverInjector.resolve("user/UpdateUserUseCase")
         await updateUserUseCase.execute(parseResult.data);
     })
 
@@ -48,8 +51,9 @@ export async function action({ request }: Route.ActionArgs) {
 export default function UserDetailPage({ loaderData, actionData }: Route.ComponentProps) {
     const [point, setPoint] = useState(0);
     const calculatePoint = useMemo(() => {
-        const pointCalculationService = appInjector.resolve("pointCalculateService");
-        return pointCalculationService.calculatePoints(loaderData.user, { amount: point });
+        const pointCalculationService = clientInjector.resolve("pointCalculateService");
+        const result = pointCalculationService.calculatePoints(loaderData.user, { amount: point });
+        return result;
     }, [point, loaderData.user]);
 
     const submit = useSubmit();
@@ -64,6 +68,7 @@ export default function UserDetailPage({ loaderData, actionData }: Route.Compone
     });
 
     const onSubmit = handleSubmit((d) => submit(d, {
+        method: "post",
         encType: "application/json",
     }))
 
@@ -73,28 +78,64 @@ export default function UserDetailPage({ loaderData, actionData }: Route.Compone
             <div className="space-y-4">
                 <UserCard key={loaderData.user.id} user={loaderData.user} />
 
-                <div>
-                    <label htmlFor="point">ポイント</label>
+                <div className="flex flex-col items-center my-4">
+                    <label htmlFor="point" className="mb-2">ポイント</label>
                     <input
                         type="number"
                         value={point}
                         onChange={(e) => setPoint(Number(e.target.value))}
+                        className="border p-2 rounded w-48 text-right mb-2"
                     />
-                    <p>計算結果: {calculatePoint}</p>
+                    <p className="font-medium">計算結果: {calculatePoint}</p>
                 </div>
 
-                <form onSubmit={onSubmit}>
-                    <span>{ }</span>
-                    <input type="hidden" {...register("id")} />
-                    <input {...register("firstName")} />
-                    {errors.firstName?.message && <p>{errors.firstName?.message}</p>}
-                    <input {...register("lastName")} />
-                    {errors.lastName?.message && <p>{errors.lastName?.message}</p>}
-                    <select {...register("userType")}>
-                        <option value="normal">normal</option>
-                        <option value="special">special</option>
-                    </select>
-                    <button type="submit">送信</button>
+                <form onSubmit={onSubmit} className="max-w-md mx-auto p-6 rounded-lg shadow-md">
+                    <div className="text-center mb-4">
+                        <span className="font-bold">User ID: {loaderData.user.id}</span>
+                        <input type="hidden" {...register("id")} />
+                    </div>
+
+                    <div className="mb-4">
+                        <label htmlFor="firstName" className="block text-sm font-medium mb-1">First Name</label>
+                        <input
+                            className="w-full p-2 border rounded focus:ring focus:ring-blue-300"
+                            {...register("firstName")}
+                        />
+                        {errors.firstName?.message &&
+                            <p className="text-red-500 text-sm mt-1">{errors.firstName?.message}</p>
+                        }
+                    </div>
+
+                    <div className="mb-4">
+                        <label htmlFor="lastName" className="block text-sm font-medium mb-1">Last Name</label>
+                        <input
+                            className="w-full p-2 border rounded focus:ring focus:ring-blue-300"
+                            {...register("lastName")}
+                        />
+                        {errors.lastName?.message &&
+                            <p className="text-red-500 text-sm mt-1">{errors.lastName?.message}</p>
+                        }
+                    </div>
+
+                    <div className="mb-4">
+                        <label htmlFor="userType" className="block text-sm font-medium mb-1">User Type</label>
+                        <select
+                            className="w-full p-2 border rounded focus:ring focus:ring-blue-300"
+                            {...register("userType")}
+                        >
+                            <option value="normal">Normal</option>
+                            <option value="special">Special</option>
+                        </select>
+                    </div>
+
+                    <div className="text-center">
+                        <button
+                            type="submit"
+                            className="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded focus:outline-none focus:ring focus:ring-blue-300"
+                        >
+                            送信
+                        </button>
+                    </div>
                 </form>
                 <div>
                     <pre>

@@ -1,4 +1,4 @@
-import { appInjector } from "~/di";
+import { serverInjector } from "~/di/server_di";
 import { UserCard } from "./component/UserCard";
 import type { DBStorageContext } from "~/infrastructure/db/db_storage";
 import { db } from "~/infrastructure/db/db";
@@ -7,14 +7,14 @@ import type { Route } from "./+types/UserInfoPage";
 export async function loader({ params, request }: Route.LoaderArgs) {
     const userId = Number(params.id);
 
-    const dbStorage = appInjector.resolve("dbStorage");
+    const dbStorage = serverInjector.resolve("dbStorage");
     const dbContext: DBStorageContext = {
         request,
         db
     }
 
     const userInfo = await dbStorage.run(dbContext, async () => {
-        const getUserInfoUseCase = appInjector.resolve("userInfo/GetUserInfoUseCase")
+        const getUserInfoUseCase = serverInjector.resolve("userInfo/GetUserInfoUseCase")
         return await getUserInfoUseCase.execute(userId);
     })
 

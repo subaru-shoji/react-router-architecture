@@ -23,6 +23,7 @@ export class DrizzleUserCommandRepository implements IUserCommandRepository {
 		if (!db) {
 			throw new Error("Database connection is not available");
 		}
-		await db.update(users).set(user).where(eq(users.id, user.id));
+		const { id, ...userWithoutId } = user;
+		await db.update(users).set(userWithoutId).where(eq(users.id, user.id));
 	}
 }

@@ -1,4 +1,4 @@
-import { appInjector } from "~/di";
+import { serverInjector } from "~/di/server_di";
 import { db } from "~/infrastructure/db/db";
 import type { Route } from "./+types/UserCreatePage";
 import { User } from "~/domain/model/user";
@@ -15,8 +15,8 @@ export async function action({ request }: Route.ActionArgs) {
         return parseResult.error;
     }
 
-    await appInjector.resolve("dbStorage").run({ request, db }, async () => {
-        const createUserUseCase = appInjector.resolve("user/CreateUserUseCase")
+    await serverInjector.resolve("dbStorage").run({ request, db }, async () => {
+        const createUserUseCase = serverInjector.resolve("user/CreateUserUseCase")
         await createUserUseCase.execute(parseResult.data);
     })
 
