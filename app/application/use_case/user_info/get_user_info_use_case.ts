@@ -4,7 +4,7 @@ import type { UserInfoFacade } from "~/domain/facade/user_info_facade";
 import type { UserInfo } from "~/domain/model/user_info";
 
 export class GetUserInfoUseCase {
-	public static inject = ["pointCalculationService"] as const;
+	public static inject = ["userInfoFacade"] as const;
 
 	constructor(private userInfoFacade: UserInfoFacade) {}
 
