@@ -20,6 +20,9 @@ importers:
       drizzle-orm:
         specifier: ^0.41.0
         version: 0.41.0(@types/pg@8.11.11)(gel@2.0.2)(pg@8.14.1)
+      drizzle-zod:
+        specifier: ^0.7.1
+        version: 0.7.1(drizzle-orm@0.41.0(@types/pg@8.11.11)(gel@2.0.2)(pg@8.14.1))(zod@3.24.2)
       isbot:
         specifier: ^5.1.17
         version: 5.1.25
@@ -38,6 +41,9 @@ importers:
       typed-inject:
         specifier: ^5.0.0
         version: 5.0.0
+      zod:
+        specifier: ^3.24.2
+        version: 3.24.2
     devDependencies:
       '@biomejs/biome':
         specifier: 1.9.4
@@ -1926,6 +1932,12 @@ packages:
       sqlite3:
         optional: true
 
+  drizzle-zod@0.7.1:
+    resolution: {integrity: sha512-nZzALOdz44/AL2U005UlmMqaQ1qe5JfanvLujiTHiiT8+vZJTBFhj3pY4Vk+L6UWyKFfNmLhk602Hn4kCTynKQ==}
+    peerDependencies:
+      drizzle-orm: '>=0.36.0'
+      zod: '>=3.0.0'
+
   dunder-proto@1.0.1:
     resolution: {integrity: sha512-KIN/nDJBQRcXw0MLVhZE9iQHmG68qAVIBg9CqmUYjmQIhgij9U5MFvrqkUL5FbtyyzZuOeOt0zdeRe4UY7ct+A==}
     engines: {node: '>= 0.4'}
@@ -3146,6 +3158,9 @@ packages:
   yaml@1.10.2:
     resolution: {integrity: sha512-r3vXyErRCYJ7wg28yvBY5VSoAF8ZvlcW9/BwUzEtUsjvX/DKs24dIkuwjtuprwJJHsbyUbLApepYTR1BN4uHrg==}
     engines: {node: '>= 6'}
+
+  zod@3.24.2:
+    resolution: {integrity: sha512-lY7CDW43ECgW9u1TcT3IoXHflywfVqDYze4waEz812jR/bZ8FHDsl7pFQoSZTz5N+2NqRXs8GBwnAwo3ZNxqhQ==}
 
 snapshots:
 
@@ -4661,6 +4676,11 @@ snapshots:
       gel: 2.0.2
       pg: 8.14.1
 
+  drizzle-zod@0.7.1(drizzle-orm@0.41.0(@types/pg@8.11.11)(gel@2.0.2)(pg@8.14.1))(zod@3.24.2):
+    dependencies:
+      drizzle-orm: 0.41.0(@types/pg@8.11.11)(gel@2.0.2)(pg@8.14.1)
+      zod: 3.24.2
+
   dunder-proto@1.0.1:
     dependencies:
       call-bind-apply-helpers: 1.0.2
@@ -5927,3 +5947,5 @@ snapshots:
   yallist@3.1.1: {}
 
   yaml@1.10.2: {}
+
+  zod@3.24.2: {}
