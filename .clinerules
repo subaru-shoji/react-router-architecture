@@ -1,0 +1,171 @@
+# React Router Architecture プロジェクトルール
+
+## 1. アーキテクチャの基本原則
+
+### 1.1 クリーンアーキテクチャ
+- 依存関係は必ず外側から内側へ向かう
+- レイヤー構造：
+  - Domain（最内層）：ビジネスロジックの中心
+  - Application：ユースケースの実装
+  - Infrastructure：技術的実装の詳細
+  - Interface：UI共通コンポーネント
+  - Routes：エンドポイントとページコンポーネント
+
+### 1.2 DDD（ドメイン駆動設計）
+- ドメインモデルをビジネスロジックの中心に置く
+- ユビキタス言語を使用（コードとビジネス用語の一致）
+- 集約、エンティティ、値オブジェクトの適切な使用
+
+### 1.3 CQRS
+- Query（読み取り）とCommand（書き込み）の責務を分離
+- リポジトリインターフェースをQuery/Commandで分割
+- 各操作の意図を明確に表現
+
+## 2. プロジェクト構造規則
+
+### 2.1 ディレクトリ構造
+- /app
+  - /domain：ビジネスロジック、モデル、インターフェース
+  - /application：ユースケース実装
+  - /infrastructure：技術実装（DB、外部API等）
+  - /interface：共通UIコンポーネント
+  - /routes：ページコンポーネントとルーティング
+  - /di：依存性注入設定
+
+### 2.2 各レイヤーの責務
+- domain：
+  - ビジネスルールの定義
+  - モデル、リポジトリインターフェース、ドメインサービスの実装
+- application：
+  - ユースケースの実装
+  - ドメインオブジェクトの操作
+- infrastructure：
+  - リポジトリの具体的実装
+  - 外部サービスとの連携実装
+- interface：
+  - 再利用可能なUIコンポーネント
+- routes：
+  - ページコンポーネント
+  - loader/action実装
+
+## 3. 命名規則
+
+### 3.1 ファイル命名
+- TSXファイル：PascalCase
+  - 例：UserCreatePage.tsx, Button.tsx
+- その他のファイル：snake_case
+  - 例：create_user_use_case.ts, user_repository.ts
+
+### 3.2 クラス・インターフェース命名
+- インターフェース：先頭に'I'を付ける
+  - 例：IUserRepository, IEmailService
+- 実装クラス：技術名を含める
+  - 例：DrizzleUserRepository, SendGridEmailService
+- ユースケース：動作を明確に
+  - 例：CreateUserUseCase, UpdateUserUseCase
+
+### 3.3 変数・関数命名
+- 関数：動詞から始める
+  - 例：createUser(), validateInput()
+- 変数：意図が明確な名前
+  - 例：userCount, isValid
+- イベントハンドラ：handle接頭辞
+  - 例：handleSubmit(), handleClick()
+
+## 4. コーディング規約
+
+### 4.1 TypeScript/React
+- 厳格な型付けを強制
+- any型の使用を禁止
+- コンポーネントはFunction Componentで実装
+- Props型を明示的に定義
+
+### 4.2 テストコード
+- テストファイル命名：*.test.ts
+- ユースケースは必ずテスト作成
+- モック使用はインフラ層のみ
+- テストケース命名は目的を明確に
+
+### 4.3 エラーハンドリング
+- ドメイン固有の例外クラスを使用
+- エラーメッセージは具体的に
+- 例外は適切な層でキャッチ
+
+## 5. 技術スタック固有のルール
+
+### 5.1 Drizzle ORM
+- スキーマ定義は/infrastructure/db/schema.tsに集約
+- マイグレーションは必ずバージョン管理
+- トランザクション管理を適切に実装
+
+### 5.2 React Router
+- loader/actionはページコンポーネントと同じファイルに定義
+- ルーティング定義は集約
+- エラーバウンダリの適切な設置
+
+### 5.3 TailwindCSS
+- カスタムクラスの定義は最小限に
+- 共通スタイルはコンポーネント化
+- ユーティリティファーストの原則を遵守
+
+### 5.4 Validation (Zod)
+- バリデーションスキーマは個別ファイルで管理
+- 再利用可能なスキーマは共有
+- エラーメッセージの統一
+
+## 6. 品質管理ルール
+
+### 6.1 テスト要件
+- ユニットテストカバレッジ80%以上
+- 重要なユースケースは結合テスト必須
+- テストシナリオの文書化
+
+### 6.2 コードレビュー基準
+- アーキテクチャ原則の遵守
+- 命名規則の遵守
+- テストコードの品質
+- パフォーマンスへの考慮
+
+### 6.3 ドキュメント要件
+- 主要なインターフェースにJSDoc
+- 複雑なロジックには説明コメント
+- README.mdの更新維持
+
+## 7. 初心者の方へ：歩き方のヒント
+
+### 7.1 既存コードの参考
+- 新機能を追加する前に、同様の機能の実装を探す
+  - 例：新しいユースケースを作る → `/app/application/use_case/user`を参考に
+  - 例：新しいページを作る → `/app/routes/user`のページ実装を参考に
+- テストコードも既存実装を参考に
+  - 例：`create_user_use_case.test.ts`を参考にテストを書く
+
+### 7.2 実装の順序
+1. ドメインモデルの定義・拡張（`/app/domain/model`）
+2. リポジトリインターフェースの定義（`/app/domain/repository`）
+3. ユースケースの実装（`/app/application/use_case`）
+4. インフラストラクチャの実装（`/app/infrastructure`）
+5. UIコンポーネントの実装（`/app/ui/component`）
+6. ページコンポーネントの実装（`/app/routes`）
+
+### 7.3 コード例の参照先
+- ドメインモデル例：`/app/domain/model/user.ts`
+- リポジトリ例：
+  - インターフェース：`/app/domain/repository/i_user_query_repository.ts`
+  - 実装：`/app/infrastructure/repository/drizzle_user_query_repository.ts`
+- ユースケース例：`/app/application/use_case/user/create_user_use_case.ts`
+- UIコンポーネント例：`/app/ui/component/Button.tsx`
+- ページコンポーネント例：`/app/routes/user/UserCreatePage.tsx`
+
+### 7.4 よくある実装パターン
+- 新規作成機能：`create_user_use_case.ts`を参考に
+- 詳細表示機能：`get_user_use_case.ts`を参考に
+- 一覧表示機能：`get_all_user_use_case.ts`を参考に
+- 更新機能：`update_user_use_case.ts`を参考に
+- 複雑なドメインロジック：`point_calculation_service.ts`を参考に
+- 外部システム連携：`sub_system_data_gateway.ts`を参考に
+
+### 7.5 開発の進め方
+1. まず`/app/domain/model`を確認：アプリケーションの基本概念を理解
+2. 次に`/app/application/use_case`を確認：提供している機能を把握
+3. 実装時は既存の似た機能を探して参考にする
