@@ -1,8 +1,9 @@
+import type { users } from "~/infrastructure/db/schema";
 import type { User } from "../model/user";
 
-export type CreateUserSchema = Omit<User.User, "id">;
+export type NewUser = typeof users.$inferInsert;
 
 export interface IUserCommandRepository {
-	create(user: CreateUserSchema): Promise<void>;
+	create(user: NewUser): Promise<void>;
 	update(user: User.User): Promise<void>;
 }
