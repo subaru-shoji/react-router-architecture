@@ -20,6 +20,9 @@ importers:
       drizzle-orm:
         specifier: ^0.41.0
         version: 0.41.0(@types/pg@8.11.11)(gel@2.0.2)(pg@8.14.1)
+      drizzle-seed:
+        specifier: ^0.3.1
+        version: 0.3.1(drizzle-orm@0.41.0(@types/pg@8.11.11)(gel@2.0.2)(pg@8.14.1))
       drizzle-zod:
         specifier: ^0.7.1
         version: 0.7.1(drizzle-orm@0.41.0(@types/pg@8.11.11)(gel@2.0.2)(pg@8.14.1))(zod@3.24.2)
@@ -1932,6 +1935,14 @@ packages:
       sqlite3:
         optional: true
 
+  drizzle-seed@0.3.1:
+    resolution: {integrity: sha512-F/0lgvfOAsqlYoHM/QAGut4xXIOXoE5VoAdv2FIl7DpGYVXlAzKuJO+IphkKUFK3Dz+rFlOsQLnMNrvoQ0cx7g==}
+    peerDependencies:
+      drizzle-orm: '>=0.36.4'
+    peerDependenciesMeta:
+      drizzle-orm:
+        optional: true
+
   drizzle-zod@0.7.1:
     resolution: {integrity: sha512-nZzALOdz44/AL2U005UlmMqaQ1qe5JfanvLujiTHiiT8+vZJTBFhj3pY4Vk+L6UWyKFfNmLhk602Hn4kCTynKQ==}
     peerDependencies:
@@ -2627,6 +2638,9 @@ packages:
   proxy-addr@2.0.7:
     resolution: {integrity: sha512-llQsMLSUDUPT44jdrU/O37qlnifitDP+ZwrmmZcoSKyLKvtZxpyV0n2/bD/N4tBAAZ/gJEdZU7KMraoK1+XYAg==}
     engines: {node: '>= 0.10'}
+
+  pure-rand@6.1.0:
+    resolution: {integrity: sha512-bVWawvoZoBYpp6yIoQtQXHZjmz35RSVHnUOTefl8Vcjr8snTPY1wnpSPMWekcFwbxI6gtmT7rSYPFvz71ldiOA==}
 
   qs@6.13.0:
     resolution: {integrity: sha512-+38qI9SOr8tfZ4QmJNplMUxqjbe7LKvvZgWdExBOmd+egZTtjLB67Gu0HRX3u/XOq7UU2Nx6nsjvS16Z9uwfpg==}
@@ -4676,6 +4690,12 @@ snapshots:
       gel: 2.0.2
       pg: 8.14.1
 
+  drizzle-seed@0.3.1(drizzle-orm@0.41.0(@types/pg@8.11.11)(gel@2.0.2)(pg@8.14.1)):
+    dependencies:
+      pure-rand: 6.1.0
+    optionalDependencies:
+      drizzle-orm: 0.41.0(@types/pg@8.11.11)(gel@2.0.2)(pg@8.14.1)
+
   drizzle-zod@0.7.1(drizzle-orm@0.41.0(@types/pg@8.11.11)(gel@2.0.2)(pg@8.14.1))(zod@3.24.2):
     dependencies:
       drizzle-orm: 0.41.0(@types/pg@8.11.11)(gel@2.0.2)(pg@8.14.1)
@@ -5393,6 +5413,8 @@ snapshots:
     dependencies:
       forwarded: 0.2.0
       ipaddr.js: 1.9.1
+
+  pure-rand@6.1.0: {}
 
   qs@6.13.0:
     dependencies:

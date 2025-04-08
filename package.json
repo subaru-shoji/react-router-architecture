@@ -7,7 +7,12 @@
     "dev": "react-router dev",
     "start": "react-router-serve ./build/server/index.js",
     "typecheck": "react-router typegen && tsc",
-    "test": "vitest --run"
+    "test": "vitest --run",
+    "db:seed": "tsx ./scripts/db_seed.ts",
+    "db:reset": "tsx ./scripts/db_reset.ts",
+    "db:migrate:generate": "drizzle-kit generate",
+    "db:migrate:migrate": "drizzle-kit migrate",
+    "db:view": "drizzle-kit studio"
   },
   "dependencies": {
     "@react-router/node": "^7.5.0",
@@ -32,6 +37,7 @@
     "@types/react": "^19.0.1",
     "@types/react-dom": "^19.0.1",
     "drizzle-kit": "^0.30.6",
+    "drizzle-seed": "^0.3.1",
     "react-router-devtools": "^1.1.0",
     "tailwindcss": "^4.0.0",
     "tsx": "^4.19.3",
