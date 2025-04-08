@@ -11,19 +11,27 @@
   "dependencies": {
     "@react-router/node": "^7.5.0",
     "@react-router/serve": "^7.5.0",
+    "dotenv": "^16.4.7",
+    "drizzle-orm": "^0.41.0",
     "isbot": "^5.1.17",
+    "pg": "^8.14.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-router": "^7.5.0"
+    "react-router": "^7.5.0",
+    "typed-inject": "^5.0.0"
   },
   "devDependencies": {
+    "@biomejs/biome": "1.9.4",
     "@react-router/dev": "^7.5.0",
     "@tailwindcss/vite": "^4.0.0",
     "@types/node": "^20",
+    "@types/pg": "^8.11.11",
     "@types/react": "^19.0.1",
     "@types/react-dom": "^19.0.1",
+    "drizzle-kit": "^0.30.6",
     "react-router-devtools": "^1.1.0",
     "tailwindcss": "^4.0.0",
+    "tsx": "^4.19.3",
     "typescript": "^5.7.2",
     "vite": "^5.4.11",
     "vite-tsconfig-paths": "^5.1.4"
