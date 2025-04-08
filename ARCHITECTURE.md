@@ -119,17 +119,24 @@
 
 * **ファイル名の規則:**
   * **TSXファイル:** PascalCase（先頭大文字）を使用します。
-    * 例: `UserProfile.tsx`, `OrderDetail.tsx`, `Button.tsx`
+    * 例: `UserCreatePage.tsx`, `UserDetailPage.tsx`, `UserCard.tsx`, `Button.tsx`
   * **その他のファイル:** snake_case（小文字とアンダースコア）を使用します。
-    * 例: `user_repository.ts`, `order_service.ts`, `database_client.ts`
+    * 例: `create_user_use_case.ts`, `point_calculation_service.ts`, `db_storage.ts`
 
 * **単数形の使用:** ファイル名やクラス名には複数形ではなく単数形を使います。
-  * 例: `user.ts`（`users.ts`ではない）, `product.ts`（`products.ts`ではない）
+  * 例: `user.ts`（`users.ts`ではない）, `point.ts`（`points.ts`ではない）
 
 * **その他の命名規則:**
-  * クラス用のインターフェース名の先頭には `I` をつけます（例: `IUserRepository`）
-  * クラス名はその役割を明確に示す名前にします（例: `DrizzleUserRepository`）
+  * インターフェース名の先頭には `I` をつけます
+    * 例: `IUserQueryRepository`, `IUserCommandRepository`, `ISubSystemDataGateway`
+  * 実装クラス名は技術やフレームワーク名を含めます
+    * 例: `DrizzleUserQueryRepository`, `DrizzleUserCommandRepository`, `SendGridEmailService`
+  * ユースケースクラス名は動作を明確に示します
+    * 例: `CreateUserUseCase`, `GetUserUseCase`, `UpdateUserUseCase`
+  * コンポーネント名は役割や表示内容を明確に示します
+    * 例: `UserCreatePage`, `UserDetailPage`, `UserCard`
   * 変数名や関数名はその目的や動作を明確に表す名前にします
+    * 例: `calculatePoints()`, `getUserById()`, `handleSubmit()`
 
 これらの命名規則に従うことで、コードの可読性が向上し、チーム内での一貫性が保たれます。また、ファイルの役割や内容が名前から直感的に理解しやすくなります。
 
@@ -153,55 +160,85 @@
 /app
 ├── domain/                     # ドメイン層: コアビジネスロジックとルール
 │   ├── model/                  #   - エンティティ、値オブジェクトなど
-│   │   └── user.ts             #     例: User エンティティ定義
-│   ├── repository/             #   - リポジトリインターフェース (Query/Command分離)。必ず分離する必要はない。その場合は、i_user_repository (Optional。serviceやfacade等で必要になったら用意するといい。)
-│   │   ├── i_user_query_repository.ts     #     例: User データ取得用インターフェース
-│   │   └── i_user_command_repository.ts   #     例: User データ更新用インターフェース
-│   ├── gateway/                #   - 外部(サブシステム)アクセスインターフェース (Optional。serviceやfacade等で必要になったら用意するといい。)
-│   │   └── i_sub_system_data_gateway.ts #     例: サブシステムデータ操作インターフェース
-│   ├── service/                #   - ドメインサービス (複雑なビジネスロジック) (Optional)
-│   │   └── point_calculation_service.ts #     例: ポイント計算ロジック
-│   └── facade/                 #   - ドメインファサード (ドメイン内連携調整) (Optional)
-│       └── user_management_facade.ts #     例: ユーザー関連の複雑な連携を扱う
+│   │   ├── user.ts            #     例: User エンティティ定義
+│   │   ├── point.ts           #     例: Point 値オブジェクト定義
+│   │   ├── user_info.ts       #     例: UserInfo エンティティ定義
+│   │   └── sub_system_data.ts #     例: サブシステムデータ定義
+│   ├── repository/            #   - リポジトリインターフェース (Query/Command分離)
+│   │   ├── i_user_query_repository.ts    #     例: User データ取得用インターフェース
+│   │   └── i_user_command_repository.ts  #     例: User データ更新用インターフェース
+│   ├── gateway/               #   - 外部(サブシステム)アクセスインターフェース
+│   │   └── i_sub_system_data_gateway.ts  #     例: サブシステムデータ操作インターフェース
+│   ├── service/               #   - ドメインサービス (複雑なビジネスロジック)
+│   │   └── point_calculation_service.ts  #     例: ポイント計算ロジック
+│   └── facade/                #   - ドメインファサード (ドメイン内連携調整)
+│       └── user_info_facade.ts #     例: ユーザー情報関連の複雑な連携を扱う
 │
 ├── application/              # アプリケーション層: ユースケース、アプリケーション固有ロジック
-│   ├── use_case/                #   - ユースケース
-│   │   └── get_user_use_case.ts     #     例: ユーザー取得ユースケース
-│   │   └── create_user_use_case.ts  #     例: ユーザー作成ユースケース
-│   └── dto/                    #   - データ転送オブジェクト (Optional。書く量が増えるので、あとで追加する方針でもいい)
-│       └── user_dto.ts          #     例: ユーザー情報転送用オブジェクト
+│   └── use_case/             #   - ユースケース
+│       ├── user/             #     - ユーザー関連のユースケース
+│       │   ├── create_user_use_case.ts  #       例: ユーザー作成
+│       │   ├── get_user_use_case.ts     #       例: ユーザー取得
+│       │   ├── get_all_user_use_case.ts #       例: 全ユーザー取得
+│       │   └── update_user_use_case.ts  #       例: ユーザー更新
+│       └── user_info/        #     - ユーザー情報関連のユースケース
+│           └── get_user_info_use_case.ts #       例: ユーザー情報取得
 │
 ├── infrastructure/           # インフラストラクチャ層: 技術的詳細、外部連携実装
-│   ├── db/                     #   - Drizzle ORM 関連
-│   │   ├── schema.ts           #     - Drizzle スキーマ定義
-│   │   ├── client.ts           #     - Drizzle Client インスタンス化
-│   │   └── migrate.ts          #     - Drizzle マイグレーションスクリプト (Optional)
-│   ├── repository/             #   - リポジトリ実装 (Drizzle使用) 必ず分離する必要はない。その場合は、IUser_repository
-│   │   ├── drizzle_user_query_repository.ts    #     - User取得リポジトリ実装
-│   │   └── drizzle_user_command_repository.ts  #     - User更新リポジトリ実装
-│   ├── gateway/                #   - ゲートウェイ実装 (外部API等連携) (Optional)
-│   │   └── sub_system_data_api_adapter.ts   #     - サブシステムAPIアダプター実装
-│   └── service/                #   - インフラ固有サービス実装 (Optional)
-│       └── send_grid_email_service.ts #     - 例: Email送信サービス実装
+│   ├── db/                   #   - データベース関連
+│   │   ├── db.ts            #     - データベース接続設定
+│   │   ├── db_storage.ts    #     - ストレージ設定
+│   │   └── schema.ts        #     - データベーススキーマ定義
+│   ├── repository/          #   - リポジトリ実装 (Drizzle使用)
+│   │   ├── drizzle_user_query_repository.ts   #     - User取得リポジトリ実装
+│   │   └── drizzle_user_command_repository.ts #     - User更新リポジトリ実装
+│   ├── gateway/             #   - ゲートウェイ実装 (外部API等連携)
+│   │   └── sub_system_data_gateway.ts    #     - サブシステムデータゲートウェイ実装
+│   └── service/             #   - インフラ固有サービス実装
+│       └── send_grid_email_service.ts    #     - Email送信サービス実装
 │
-├── interface/                # インターフェースアダプター層: UI部品など
-│   └── component/              #   - 再利用可能なUIコンポーネント
-│       └── Button.tsx          #     例: 共通ボタンコンポーネント
+├── ui/                      # UI層: 再利用可能なUIコンポーネント
+│   └── component/           #   - 共通コンポーネント
+│       └── Button.tsx       #     例: 共通ボタンコンポーネント
 │
-├── route/                    # ルーティング層: ReactRouterのルーティング定義
-│   └── user/                   #   - ユーザー関連ルート用ディレクトリ例
-│       ├── UserListPage.tsx        #   - /usersを表示する (loader/action含む)
-│       └── UserCard.tsx         #  - User情報表示用のコンポーネント
+├── routes/                  # ルーティング層: ReactRouterのルーティング定義
+│   ├── home.tsx            #   - ホームページ
+│   └── user/               #   - ユーザー関連ページ
+│       ├── UserCreatePage.tsx  #     - ユーザー作成ページ
+│       ├── UserDetailPage.tsx  #     - ユーザー詳細ページ
+│       ├── UserInfoPage.tsx    #     - ユーザー情報ページ
+│       ├── UserListPage.tsx    #     - ユーザー一覧ページ
+│       └── component/          #     - ユーザー関連の共通コンポーネント
+│           └── UserCard.tsx    #       例: ユーザーカード表示コンポーネント
 │
-├── entry.client.tsx          # ReactRouter クライアントエントリーポイント
-├── entry.server.tsx          # ReactRouter サーバーエントリーポイント (DIコンテナ, DBクライアント初期化等)
-└── root.tsx                  # ReactRouter ルートレイアウトコンポーネント
+├── di/                      # 依存性注入設定
+│   ├── client_di.ts        #   - クライアントサイドDI設定
+│   └── server_di.ts        #   - サーバーサイドDI設定
 │
-/drizzle/                     # Drizzle 設定ファイル・生成物用ディレクトリ (Optional)
-drizzle.config.ts             # Drizzle 設定ファイル
-package.json                  # プロジェクト定義ファイル
-tsconfig.json                 # TypeScript 設定ファイル
-# ... 他の設定ファイル (例: .env, .gitignore)
+├── root.tsx                # アプリケーションルートコンポーネント
+├── routes.ts               # ルーティング定義
+└── app.css                 # グローバルスタイル
+│
+/drizzle/                   # Drizzle マイグレーション関連
+├── 0000_useful_purifiers.sql  # マイグレーションファイル
+└── meta/                   #   - メタデータ
+    ├── _journal.json      #     - マイグレーション履歴
+    └── 0000_snapshot.json #     - スキーマスナップショット
+
+/scripts                    # ユーティリティスクリプト
+├── db_reset.ts            #   - データベースリセットスクリプト
+└── db_seed.ts             #   - テストデータ投入スクリプト
+
+# 設定ファイル
+.env                       # 環境変数設定
+.gitignore                # Git除外設定
+compose.yml               # Docker Compose設定
+drizzle.config.ts         # Drizzle設定
+package.json              # プロジェクト定義
+pnpm-lock.yaml           # 依存関係ロック
+react-router.config.ts    # ReactRouter設定
+tsconfig.json            # TypeScript設定
+vite.config.ts           # Vite設定
 ```
 
 
