@@ -36,8 +36,8 @@
 * **中身:**
     * `model`: ビジネスに出てくる重要なモノや概念 (例: `User` (ユーザー), `Order` (注文) )。レシピの材料リストのようなものです。
     * `repository` (インターフェース): データの保存や読み込みの「やり方（契約）」だけを決めます (例: 「ユーザーを探す機能」「注文を保存する機能」)。実際にどうやって保存するか(例: どのデータベースを使うか)は、ここでは決めません。「注文用紙」のようなものです。
-        * `I***QueryRepository.ts`: データを**探す・読み込む**ための契約書。
-        * `I***CommandRepository.ts`: データを**新しく作る・変更する・消す**ための契約書。
+        * `i_***_query_repository.ts`: データを**探す・読み込む**ための契約書。
+        * `i_***_command_repository.ts`: データを**新しく作る・変更する・消す**ための契約書。
     * `gateway` (インターフェース): 他の重要なシステム（サブシステムなど）と連携するための「やり方（契約）」を決めます。「外部業者への専用連絡窓口の仕様書」のようなものです。
     * `service`: 複数のモノや概念が関わる、少し複雑なビジネスルール (例: 「注文時の送料計算」)。複数の材料を使う複雑なレシピのようなものです。
     * `facade`: メインのビジネスとサブシステムが関わるような、特に複雑な連携作業を調整する専門家。「複数のレシピや外部から取り寄せた食材を組み合わせて、コース料理全体を管理するシェフ長」のようなイメージです。
@@ -50,7 +50,7 @@
 * **役割:** 「ビジネス専門家チーム (`domain`)」の知識を使って、具体的なアプリケーションの機能（ユースケース）を実行するチームです。
 * **例え:** 会社の「プロジェクトマネージャー」や、キッチンの「フロアマネージャー」。
 * **中身:**
-    * `useCase`: アプリケーションができる具体的な「仕事」の１つ１つ (例: 「ユーザーを新しく登録する」「注文の詳細を表示する」)。マネージャーが専門家チームに指示を出す流れ、のようなものです。彼らは `domain` が決めた「契約書 (`repository`, `gateway`, `facade` のインターフェース)」を使って仕事を依頼します。
+    * `use_case`: アプリケーションができる具体的な「仕事」の１つ１つ (例: 「ユーザーを新しく登録する」「注文の詳細を表示する」)。マネージャーが専門家チームに指示を出す流れ、のようなものです。彼らは `domain` が決めた「契約書 (`repository`, `gateway`, `facade` のインターフェース)」を使って仕事を依頼します。
     * `dto` (Data Transfer Object): 部署間でデータを運ぶための、シンプルな「データ運搬用ケース」。中身がごちゃ混ぜにならないように、決まった形でデータをやり取りします。
 * **ポイント:** 外の世界（ウェブのリクエストなど）と、内部のビジネスルール (`domain`) を繋ぐ橋渡し役です。
 
@@ -63,8 +63,8 @@
 * **中身:**
     * `db`: データベースの設定や接続情報 (このプロジェクトでは Drizzle ORM を使います)。
     * `repository` (実装): `domain` が決めた「契約書 (`repository` インターフェース)」に従って、**実際に** Drizzle ORM を使ってデータベースにデータを保存したり読み込んだりするコード。「注文用紙 (`Query/Command Repository I/F`)」を見て、倉庫 (`db`) から実際に品物を持ってきたり、棚にしまったりする「倉庫係」です。
-        * `Drizzle***QueryRepository.ts`: データを**読み込む**具体的な処理。
-        * `Drizzle***CommandRepository.ts`: データを**変更する**具体的な処理。
+        * `drizzle_***_query_repository.ts`: データを**読み込む**具体的な処理。
+        * `drizzle_***_command_repository.ts`: データを**変更する**具体的な処理。
     * `gateway` (実装): `domain` が決めた「契約書 (`gateway` インターフェース)」に従って、**実際に**外部のサブシステムと通信するコード。「仕様書」を見て、外部業者に**実際に**電話をかけたり、データを送ったりする「渉外担当」です。
     * `service`: メール送信機能など、その他の技術的な便利ツール。
 * **ポイント:** アプリケーションが動くために必要な、具体的な技術や外部との接続部分が全てここに集まっています。
@@ -86,7 +86,7 @@
 * **役割:** ウェブブラウザからのアクセス（リクエスト）を受け付け、適切な担当部署（主に `application` チーム）に処理を依頼し、最終的な結果（ウェブページ）をユーザーに返す、玄関口です。このプロジェクトでは ReactRouter フレームワークがこの役割の多くを担います。
 * **例え:** 会社の「受付」や、レストランの「案内係」。
 * **中身:**
-    * 各ルートディレクトリ (例: `/home`, `/user/profile.$userId`): 特定のURLに対応するファイル置き場。
+    * 各ルートディレクトリ (例: `/home`, `/user/:id`): 特定のURLに対応するファイル置き場。
     * `route.tsx` ファイル:
         * `loader`: ページが表示される**前**にサーバーでデータを準備する機能。`application` チームにデータ取得を依頼します。
         * `action`: ユーザーがフォーム送信などを行った**後**にサーバーで処理を実行する機能。`application` チームにデータ更新などを依頼します。
@@ -100,7 +100,7 @@
 1.  **ユーザー:** ブラウザで `/user/profile/123` にアクセス。
 2.  **`app/route` (受付):** `/user/profile.$userId/route.tsx` がリクエストを受け取る。
 3.  **`loader` (受付内の案内係):** ページ表示に必要なデータを準備するため、`application` チームの「ユーザー情報取得」担当 (`GetUserProfileUseCase`) を呼び出す。
-4.  **`app/application/useCase` (業務マネージャー):** 「ユーザー情報取得」の仕事を開始。`domain` チームの「ユーザーデータ取得契約書 (`IUserQueryRepository`)」を使って、データ取得を依頼。
+4.  **`app/application/use_case` (業務マネージャー):** 「ユーザー情報取得」の仕事を開始。`domain` チームの「ユーザーデータ取得契約書 (`IUserQueryRepository`)」を使って、データ取得を依頼。
 5.  **`app/infrastructure/repository` (倉庫係):** `IUserQueryRepository` の契約に基づき、`DrizzleUserQueryRepository` が Drizzle ORM を使ってデータベースから ID `123` のユーザーを探す。
 6.  **データが戻る:** 倉庫係 (`infrastructure`) → マネージャー (`application`) → 受付 (`loader`) へ、見つかったユーザーデータが返される。
 7.  **`XxxxPage` コンポーネント (受付内の表示係):** `loader` から受け取ったデータを使って、プロフィールページのHTMLを生成。
@@ -116,7 +116,7 @@
 ### 初心者の方へ：歩き方のヒント
 
 * **まずは `domain/model` を見てみよう:** このアプリケーションがどんな「モノ」を扱っているのか理解するのが第一歩です。
-* **次に `application/useCase` を見てみよう:** このアプリケーションがどんな「機能」を提供しているのか掴みましょう。
+* **次に `application/use_case` を見てみよう:** このアプリケーションがどんな「機能」を提供しているのか掴みましょう。
 * **機能を追加するときは？:**
     1.  その機能の中心的なビジネスルールは？ (`domain`)
     2.  アプリケーションとしての具体的な手順は？ (`application/useCase`)
@@ -124,9 +124,8 @@
     4.  ユーザーはどう操作して、どう見える？ (`app/route`, `app/interface/component`)
     …という順番で考えると、どこにコードを書けばよいか分かりやすくなります。
 * **既存のコードを真似てみよう:** 似たような機能がどう実装されているか見るのが一番の近道です。
-* **分からなければ質問しよう！:** 遠慮なくチームのメンバーに聞いてください。
+* **分からなければ質問しよう！:** GeminiやChatgptに聞いてください。
 
-このドキュメントが、プロジェクトの構造を理解する助けになれば幸いです！
 
 ---
 
@@ -135,35 +134,35 @@
 ├── domain/                     # ドメイン層: コアビジネスロジックとルール
 │   ├── model/                  #   - エンティティ、値オブジェクトなど
 │   │   └── User.ts             #     例: User エンティティ定義
-│   ├── repository/             #   - リポジトリインターフェース (Query/Command分離)。必ず分離する必要はない。その場合は、IUserRepository (Optional)
-│   │   ├── IUserQueryRepository.ts     #     例: User データ取得用インターフェース
-│   │   └── IUserCommandRepository.ts   #     例: User データ更新用インターフェース
+│   ├── repository/             #   - リポジトリインターフェース (Query/Command分離)。必ず分離する必要はない。その場合は、IUser_repository (Optional)
+│   │   ├── IUser_query_repository.ts     #     例: User データ取得用インターフェース
+│   │   └── IUser_command_repository.ts   #     例: User データ更新用インターフェース
 │   ├── gateway/                #   - 外部(サブシステム)アクセスインターフェース (Optional)
-│   │   └── ISubSystemDataGateway.ts #     例: サブシステムデータ操作インターフェース
+│   │   └── ISub_system_data_gateway.ts #     例: サブシステムデータ操作インターフェース
 │   ├── service/                #   - ドメインサービス (複雑なビジネスロジック) (Optional)
-│   │   └── PointCalculationService.ts #     例: ポイント計算ロジック
+│   │   └── Point_calculation_service.ts #     例: ポイント計算ロジック
 │   └── facade/                 #   - ドメインファサード (ドメイン内連携調整) (Optional)
-│       └── UserManagementFacade.ts #     例: ユーザー関連の複雑な連携を扱う
+│       └── User_management_facade.ts #     例: ユーザー関連の複雑な連携を扱う
 │
 ├── application/              # アプリケーション層: ユースケース、アプリケーション固有ロジック
-│   ├── useCase/                #   - ユースケース
-│   │   └── GetUserUseCase.ts     #     例: ユーザー取得ユースケース
-│   │   └── CreateUserUseCase.ts  #     例: ユーザー作成ユースケース
+│   ├── use_case/                #   - ユースケース
+│   │   └── Get_user_use_case.ts     #     例: ユーザー取得ユースケース
+│   │   └── Create_user_use_case.ts  #     例: ユーザー作成ユースケース
 │   └── dto/                    #   - データ転送オブジェクト (Optional。書く量が増えるので、あとで追加する方針でもいい)
-│       └── UserDTO.ts          #     例: ユーザー情報転送用オブジェクト
+│       └── User_dto.ts          #     例: ユーザー情報転送用オブジェクト
 │
 ├── infrastructure/           # インフラストラクチャ層: 技術的詳細、外部連携実装
 │   ├── db/                     #   - Drizzle ORM 関連
 │   │   ├── schema.ts           #     - Drizzle スキーマ定義
 │   │   ├── client.ts           #     - Drizzle Client インスタンス化
 │   │   └── migrate.ts          #     - Drizzle マイグレーションスクリプト (Optional)
-│   ├── repository/             #   - リポジトリ実装 (Drizzle使用) 必ず分離する必要はない。その場合は、IUserRepository
-│   │   ├── DrizzleUserQueryRepository.ts    #     - User取得リポジトリ実装
-│   │   └── DrizzleUserCommandRepository.ts  #     - User更新リポジトリ実装
+│   ├── repository/             #   - リポジトリ実装 (Drizzle使用) 必ず分離する必要はない。その場合は、IUser_repository
+│   │   ├── Drizzle_user_query_repository.ts    #     - User取得リポジトリ実装
+│   │   └── Drizzle_user_command_repository.ts  #     - User更新リポジトリ実装
 │   ├── gateway/                #   - ゲートウェイ実装 (外部API等連携) (Optional)
-│   │   └── SubSystemDataApiAdapter.ts   #     - サブシステムAPIアダプター実装
+│   │   └── Sub_system_data_api_adapter.ts   #     - サブシステムAPIアダプター実装
 │   └── service/                #   - インフラ固有サービス実装 (Optional)
-│       └── SendGridEmailService.ts #     - 例: Email送信サービス実装
+│       └── Send_grid_email_service.ts #     - 例: Email送信サービス実装
 │
 ├── interface/                # インターフェースアダプター層: UI部品など
 │   └── component/              #   - 再利用可能なUIコンポーネント
