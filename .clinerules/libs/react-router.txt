@@ -1,0 +1,718 @@
+TITLE: Implementing Protected Routes with React Router
+DESCRIPTION: Example showing how to protect routes with authentication using React Router features like useNavigate, Navigate component, and location state. Includes handling login redirects and maintaining navigation history.
+SOURCE: https://github.com/remix-run/react-router/blob/main/examples/auth/README.md#2025-04-19_snippet_0
+
+LANGUAGE: typescript
+CODE:
+```
+// No code snippets provided in the original text
+```
+
+----------------------------------------
+
+TITLE: Configuring Basic React Router Setup
+DESCRIPTION: Basic configuration for React Router in a React application. This snippet demonstrates how to set up routing with a BrowserRouter and define routes using Route components.
+SOURCE: https://github.com/remix-run/react-router/blob/main/docs/start/index.md#2025-04-19_snippet_1
+
+LANGUAGE: jsx
+CODE:
+```
+import * as React from "react";
+import { createRoot } from "react-dom/client";
+import {
+  createBrowserRouter,
+  RouterProvider,
+} from "react-router-dom";
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <div>Hello world!</div>,
+  },
+]);
+
+createRoot(document.getElementById("root")).render(
+  <RouterProvider router={router} />
+);
+```
+
+----------------------------------------
+
+TITLE: Static Data Loading in React Router
+DESCRIPTION: This snippet demonstrates static data loading in React Router, where data is fetched during the production build. It includes both the loader function and the component that renders the data.
+SOURCE: https://github.com/remix-run/react-router/blob/main/docs/start/framework/data-loading.md#2025-04-19_snippet_2
+
+LANGUAGE: tsx
+CODE:
+```
+// route("products/:pid", "./product.tsx");
+import type { Route } from "./+types/product";
+
+export async function loader({ params }: Route.LoaderArgs) {
+  let product = await getProductFromCSVFile(params.pid);
+  return product;
+}
+
+export default function Product({
+  loaderData,
+}: Route.ComponentProps) {
+  const { name, description } = loaderData;
+  return (
+    <div>
+      <h1>{name}</h1>
+      <p>{description}</p>
+    </div>
+  );
+}
+```
+
+----------------------------------------
+
+TITLE: Basic React Router Setup with BrowserRouter
+DESCRIPTION: Demonstrates the basic setup of React Router with BrowserRouter component and a root route configuration.
+SOURCE: https://github.com/remix-run/react-router/blob/main/docs/start/declarative/routing.md#2025-04-19_snippet_0
+
+LANGUAGE: tsx
+CODE:
+```
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { BrowserRouter, Routes, Route } from "react-router";
+import App from "./app";
+
+const root = document.getElementById("root");
+
+ReactDOM.createRoot(root).render(
+  <BrowserRouter>
+    <Routes>
+      <Route path="/" element={<App />} />
+    </Routes>
+  </BrowserRouter>
+);
+```
+
+----------------------------------------
+
+TITLE: Enabling View Transitions on Navigation Links in React Router
+DESCRIPTION: Demonstrates how to add the viewTransition prop to Link components for basic cross-fade animations between pages.
+SOURCE: https://github.com/remix-run/react-router/blob/main/docs/how-to/view-transitions.md#2025-04-19_snippet_0
+
+LANGUAGE: tsx
+CODE:
+```
+<Link to="/about" viewTransition>
+  About
+</Link>
+```
+
+----------------------------------------
+
+TITLE: Creating Basic Data Router with React Router
+DESCRIPTION: Basic example showing how to set up a Data Router using createBrowserRouter and RouterProvider components in React Router. The code demonstrates core routing configuration patterns.
+SOURCE: https://github.com/remix-run/react-router/blob/main/examples/basic-data-router/README.md#2025-04-19_snippet_0
+
+LANGUAGE: TypeScript
+CODE:
+```
+import { createBrowserRouter, RouterProvider }
+```
+
+----------------------------------------
+
+TITLE: Setting up BrowserRouter in React
+DESCRIPTION: Wrap the main App component with BrowserRouter to enable routing in the React application. This snippet shows how to import and use BrowserRouter in the main entry point of the app.
+SOURCE: https://github.com/remix-run/react-router/blob/main/docs/start/declarative/installation.md#2025-04-19_snippet_2
+
+LANGUAGE: tsx
+CODE:
+```
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { BrowserRouter } from "react-router";
+import App from "./app";
+
+const root = document.getElementById("root");
+
+ReactDOM.createRoot(root).render(
+  <BrowserRouter>
+    <App />
+  </BrowserRouter>
+);
+```
+
+----------------------------------------
+
+TITLE: Accessing Route Params in React Router Component
+DESCRIPTION: Shows how to use the useParams hook to access route parameters in a React component. The city value is extracted from the params and used in an API call.
+SOURCE: https://github.com/remix-run/react-router/blob/main/docs/start/declarative/url-values.md#2025-04-19_snippet_1
+
+LANGUAGE: tsx
+CODE:
+```
+import { useParams } from "react-router";
+
+function City() {
+  let { city } = useParams();
+  let data = useFakeDataLibrary(`/api/v2/cities/${city}`);
+  // ...
+}
+```
+
+----------------------------------------
+
+TITLE: Using useSearchParams Hook in React Router
+DESCRIPTION: Demonstrates basic usage of useSearchParams hook to access and update URL search parameters. Returns a tuple containing the current URLSearchParams and a setter function. Updating search params triggers navigation.
+SOURCE: https://github.com/remix-run/react-router/blob/main/docs/api/hooks/useSearchParams.md#2025-04-19_snippet_0
+
+LANGUAGE: tsx
+CODE:
+```
+import { useSearchParams } from "react-router";
+
+export function SomeComponent() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  // ...
+}
+```
+
+----------------------------------------
+
+TITLE: Using useActionData Hook with Form Submission in React Router
+DESCRIPTION: Demonstrates how to use useActionData hook with a Form component to handle form submissions and display response data. The example shows form data processing and conditional rendering of submission results.
+SOURCE: https://github.com/remix-run/react-router/blob/main/docs/api/hooks/useActionData.md#2025-04-19_snippet_0
+
+LANGUAGE: tsx
+CODE:
+```
+import { Form, useActionData } from "react-router";
+
+export async function action({ request }) {
+  const body = await request.formData();
+  const name = body.get("visitorsName");
+  return { message: `Hello, ${name}` };
+}
+
+export default function Invoices() {
+  const data = useActionData();
+  return (
+    <Form method="post">
+      <input type="text" name="visitorsName" />
+      {data ? data.message : "Waiting..."}
+    </Form>
+  );
+}
+```
+
+----------------------------------------
+
+TITLE: Redirect After Form Action
+DESCRIPTION: Shows how to redirect after creating a new record in a form action.
+SOURCE: https://github.com/remix-run/react-router/blob/main/docs/start/framework/navigating.md#2025-04-19_snippet_8
+
+LANGUAGE: tsx
+CODE:
+```
+import { redirect } from "react-router";
+
+export async function action({ request }) {
+  let formData = await request.formData();
+  let project = await createProject(formData);
+  return redirect(`/projects/${project.id}`);
+}
+```
+
+----------------------------------------
+
+TITLE: Implementing an Async Product Component in React
+DESCRIPTION: This code snippet defines an async Product component that fetches product data from a fake database. It demonstrates how to create a server component that can be used in a React Router loader.
+SOURCE: https://github.com/remix-run/react-router/blob/main/docs/how-to/react-server-components.md#2025-04-19_snippet_1
+
+LANGUAGE: tsx
+CODE:
+```
+export async function Product({ id }: { id: string }) {
+  const product = await fakeDb.getProduct(id);
+  return (
+    <div>
+      <h1>{product.title}</h1>
+      <p>{product.description}</p>
+    </div>
+  );
+}
+```
+
+----------------------------------------
+
+TITLE: Enabling View Transitions with React Router Link
+DESCRIPTION: Uses the viewTransition prop to enable the View Transitions API for smoother navigation experiences between pages. For specific transition styles, the useViewTransitionState hook can be used.
+SOURCE: https://github.com/remix-run/react-router/blob/main/docs/api/components/Link.md#2025-04-19_snippet_11
+
+LANGUAGE: tsx
+CODE:
+```
+<Link to={to} viewTransition>
+  Click me
+</Link>
+```
+
+----------------------------------------
+
+TITLE: Creating an Index Route in React Router
+DESCRIPTION: Demonstrates how to create an index route for the root path in a React Router application, including the file creation and route configuration.
+SOURCE: https://github.com/remix-run/react-router/blob/main/docs/tutorials/address-book.md#2025-04-19_snippet_10
+
+LANGUAGE: shellscript
+CODE:
+```
+touch app/routes/home.tsx
+```
+
+LANGUAGE: ts
+CODE:
+```
+import type { RouteConfig } from "@react-router/dev/routes";
+import { index, route } from "@react-router/dev/routes";
+
+export default [
+  index("routes/home.tsx"),
+  route("contacts/:contactId", "routes/contact.tsx"),
+] satisfies RouteConfig;
+```
+
+----------------------------------------
+
+TITLE: Adding State to Navigation with Link Component
+DESCRIPTION: Demonstrates how to add persistent client-side routing state to a location when navigating with the Link component. This state can be accessed via the useLocation hook.
+SOURCE: https://github.com/remix-run/react-router/blob/main/docs/api/components/Link.md#2025-04-19_snippet_8
+
+LANGUAGE: tsx
+CODE:
+```
+<Link to="/somewhere/else" state={{ some: "value" }} />
+```
+
+----------------------------------------
+
+TITLE: Basic Route Configuration in React Router
+DESCRIPTION: Demonstrates how to create a basic route configuration using createBrowserRouter with a single route.
+SOURCE: https://github.com/remix-run/react-router/blob/main/docs/start/data/routing.md#2025-04-19_snippet_0
+
+LANGUAGE: tsx
+CODE:
+```
+import { createBrowserRouter } from "react-router";
+
+function Root() {
+  return <h1>Hello world</h1>;
+}
+
+const router = createBrowserRouter([
+  { path: "/", Component: Root },
+]);
+```
+
+----------------------------------------
+
+TITLE: Using useLoaderData Hook with React Router
+DESCRIPTION: Example showing how to use the useLoaderData hook to retrieve data from a loader function in a React Router component. The loader fetches invoices from a database and the component accesses that data using the hook.
+SOURCE: https://github.com/remix-run/react-router/blob/main/docs/api/hooks/useLoaderData.md#2025-04-19_snippet_0
+
+LANGUAGE: tsx
+CODE:
+```
+import { useLoaderData } from "react-router";
+
+export async function loader() {
+  return await fakeDb.invoices.findAll();
+}
+
+export default function Invoices() {
+  let invoices = useLoaderData<typeof loader>();
+  // ...
+}
+```
+
+----------------------------------------
+
+TITLE: Creating and Rendering React Router
+DESCRIPTION: Example of how to create a browser router, define a route, and render it using RouterProvider. This sets up the basic routing structure for the React application.
+SOURCE: https://github.com/remix-run/react-router/blob/main/docs/start/data/installation.md#2025-04-19_snippet_2
+
+LANGUAGE: tsx
+CODE:
+```
+import {
+  createBrowserRouter,
+  RouterProvider,
+} from "react-router";
+
+import React from "react";
+import ReactDOM from "react-dom/client";
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <div>Hello World</div>,
+  },
+]);
+
+const root = document.getElementById("root");
+
+ReactDOM.createRoot(root).render(
+  <RouterProvider router={router} />
+);
+```
+
+----------------------------------------
+
+TITLE: Route Loader Implementation
+DESCRIPTION: Shows how to implement a loader function for data fetching before route rendering, using useLoaderData hook to access the loaded data.
+SOURCE: https://github.com/remix-run/react-router/blob/main/docs/start/data/route-object.md#2025-04-19_snippet_2
+
+LANGUAGE: tsx
+CODE:
+```
+import {
+  useLoaderData,
+  createBrowserRouter,
+} from "react-router";
+
+createBrowserRouter([
+  {
+    path: "/",
+    loader: loader,
+    Component: MyRoute,
+  },
+]);
+
+async function loader({ params }) {
+  return { message: "Hello, world!" };
+}
+
+function MyRoute() {
+  let data = useLoaderData();
+  return <h1>{data.message}</h1>;
+}
+```
+
+----------------------------------------
+
+TITLE: Combining Server and Client Data in React Router with TSX
+DESCRIPTION: Shows how to combine data from both server and browser before rendering a component. This pattern uses a loader for partial server data, a HydrateFallback component for SSR, and a clientLoader to merge server and client data during hydration.
+SOURCE: https://github.com/remix-run/react-router/blob/main/docs/how-to/client-data.md#2025-04-19_snippet_1
+
+LANGUAGE: tsx
+CODE:
+```
+export async function loader({
+  request,
+}: Route.LoaderArgs) {
+  const partialData = await getPartialDataFromDb({
+    request,
+  }); // (1)
+  return partialData;
+}
+
+export async function clientLoader({
+  request,
+  serverLoader,
+}: Route.ClientLoaderArgs) {
+  const [serverData, clientData] = await Promise.all([
+    serverLoader(),
+    getClientData(request),
+  ]);
+  return {
+    ...serverData, // (4)
+    ...clientData, // (4)
+  };
+}
+clientLoader.hydrate = true as const; // (3)
+
+export function HydrateFallback() {
+  return <p>Skeleton rendered during SSR</p>; // (2)
+}
+
+export default function Component({
+  // This will always be the combined set of server + client data
+  loaderData,
+}: Route.ComponentProps) {
+  return <>...</>;
+}
+```
+
+----------------------------------------
+
+TITLE: Using Fetcher for Non-Navigation Actions
+DESCRIPTION: Shows how to use fetcher.Form for submitting data without causing navigation changes.
+SOURCE: https://github.com/remix-run/react-router/blob/main/docs/start/data/actions.md#2025-04-19_snippet_3
+
+LANGUAGE: tsx
+CODE:
+```
+import { useFetcher } from "react-router";
+
+function Task() {
+  let fetcher = useFetcher();
+  let busy = fetcher.state !== "idle";
+
+  return (
+    <fetcher.Form method="post" action="/update-task/123">
+      <input type="text" name="title" />
+      <button type="submit">
+        {busy ? "Saving..." : "Save"}
+      </button>
+    </fetcher.Form>
+  );
+}
+```
+
+----------------------------------------
+
+TITLE: Implementing Client-Side Caching in React Router with TSX
+DESCRIPTION: Shows how to implement client-side caching to optimize server requests. This pattern uses a server loader for initial data, a clientLoader for cache management, and a clientAction for cache invalidation. It's important that loader and clientLoader return the same data on initial load to avoid hydration errors.
+SOURCE: https://github.com/remix-run/react-router/blob/main/docs/how-to/client-data.md#2025-04-19_snippet_4
+
+LANGUAGE: tsx
+CODE:
+```
+export async function loader({
+  request,
+}: Route.LoaderArgs) {
+  const data = await getDataFromDb({ request }); // (1)
+  return data;
+}
+
+export async function action({
+  request,
+}: Route.ActionArgs) {
+  await saveDataToDb({ request });
+  return { ok: true };
+}
+
+let isInitialRequest = true;
+
+export async function clientLoader({
+  request,
+  serverLoader,
+}: Route.ClientLoaderArgs) {
+  const cacheKey = generateKey(request);
+
+  if (isInitialRequest) {
+    isInitialRequest = false;
+    const serverData = await serverLoader();
+    cache.set(cacheKey, serverData); // (2)
+    return serverData;
+  }
+
+  const cachedData = await cache.get(cacheKey);
+  if (cachedData) {
+    return cachedData; // (3)
+  }
+
+  const serverData = await serverLoader();
+  cache.set(cacheKey, serverData);
+  return serverData;
+}
+clientLoader.hydrate = true; // (2)
+
+export async function clientAction({
+  request,
+  serverAction,
+}: Route.ClientActionArgs) {
+  const cacheKey = generateKey(request);
+  cache.delete(cacheKey); // (4)
+  const serverData = await serverAction();
+  return serverData;
+}
+```
+
+----------------------------------------
+
+TITLE: Initializing React Router with RouterProvider in TSX
+DESCRIPTION: This snippet demonstrates how to initialize a React Router data router, subscribe to its changes, and render it at the top of an application's element tree using RouterProvider.
+SOURCE: https://github.com/remix-run/react-router/blob/main/docs/api/data-routers/RouterProvider.md#2025-04-19_snippet_0
+
+LANGUAGE: tsx
+CODE:
+```
+import {
+  RouterProvider,
+  createBrowserRouter,
+} from "react-router";
+import { createRoot } from "react-dom/client";
+let router = createBrowserRouter();
+createRoot(document.getElementById("root")).render(
+  <RouterProvider router={router} />
+);
+```
+
+----------------------------------------
+
+TITLE: Client-side Data Loading in React Router
+DESCRIPTION: This snippet demonstrates how to use the `clientLoader` function to fetch data on the client side in React Router. It includes the loader function, a loading fallback component, and the main component that renders the fetched data.
+SOURCE: https://github.com/remix-run/react-router/blob/main/docs/start/framework/data-loading.md#2025-04-19_snippet_0
+
+LANGUAGE: tsx
+CODE:
+```
+// route("products/:pid", "./product.tsx");
+import type { Route } from "./+types/product";
+
+export async function clientLoader({
+  params,
+}: Route.ClientLoaderArgs) {
+  const res = await fetch(`/api/products/${params.pid}`);
+  const product = await res.json();
+  return product;
+}
+
+// HydrateFallback is rendered while the client loader is running
+export function HydrateFallback() {
+  return <div>Loading...</div>;
+}
+
+export default function Product({
+  loaderData,
+}: Route.ComponentProps) {
+  const { name, description } = loaderData;
+  return (
+    <div>
+      <h1>{name}</h1>
+      <p>{description}</p>
+    </div>
+  );
+}
+```
+
+----------------------------------------
+
+TITLE: Rendering Child Routes with Outlet Component
+DESCRIPTION: Demonstrates how to use the Outlet component from React Router to render child routes within a parent route component. This allows for nested UI structures that correspond to nested routes.
+SOURCE: https://github.com/remix-run/react-router/blob/main/docs/start/framework/routing.md#2025-04-19_snippet_5
+
+LANGUAGE: tsx
+CODE:
+```
+import { Outlet } from "react-router";
+
+export default function Dashboard() {
+  return (
+    <div>
+      <h1>Dashboard</h1>
+      {/* will either be home.tsx or settings.tsx */}
+      <Outlet />
+    </div>
+  );
+}
+```
+
+----------------------------------------
+
+TITLE: Nested Routes Configuration in React Router
+DESCRIPTION: Shows how to configure nested routes and render them using the Outlet component.
+SOURCE: https://github.com/remix-run/react-router/blob/main/docs/start/data/routing.md#2025-04-19_snippet_3
+
+LANGUAGE: ts
+CODE:
+```
+createBrowserRouter([
+  {
+    path: "/dashboard",
+    Component: Dashboard,
+    children: [
+      { index: true, Component: Home },
+      { path: "settings", Component: Settings },
+    ],
+  },
+]);
+```
+
+----------------------------------------
+
+TITLE: Index Routes Configuration in React Router
+DESCRIPTION: Shows how to define index routes, which render at their parent's URL as a default child route.
+SOURCE: https://github.com/remix-run/react-router/blob/main/docs/start/data/routing.md#2025-04-19_snippet_6
+
+LANGUAGE: ts
+CODE:
+```
+createBrowserRouter([
+  // renders at "/"
+  { index: true, Component: Home },
+  {
+    Component: Dashboard,
+    path: "/dashboard",
+    children: [
+      // renders at "/dashboard"
+      { index: true, Component: DashboardHome },
+      { path: "settings", Component: DashboardSettings },
+    ],
+  },
+]);
+```
+
+----------------------------------------
+
+TITLE: Basic Link Component Usage in React Router
+DESCRIPTION: Demonstrates the basic usage of the Link component for client-side routing, showing both simple string paths and object-based paths with pathname, search, and hash properties.
+SOURCE: https://github.com/remix-run/react-router/blob/main/docs/api/components/Link.md#2025-04-19_snippet_0
+
+LANGUAGE: tsx
+CODE:
+```
+import { Link } from "react-router";
+
+<Link to="/dashboard">Dashboard</Link>;
+
+<Link
+  to={{
+    pathname: "/some/path",
+    search: "?query=string",
+    hash: "#hash",
+  }}
+/>;
+```
+
+----------------------------------------
+
+TITLE: Providing Data with Route Loaders in React Router
+DESCRIPTION: This snippet demonstrates how to set up a route loader to provide data to a route component. The loader function returns an object with records fetched from an asynchronous function.
+SOURCE: https://github.com/remix-run/react-router/blob/main/docs/start/data/data-loading.md#2025-04-19_snippet_0
+
+LANGUAGE: tsx
+CODE:
+```
+createBrowserRouter([
+  {
+    path: "/",
+    loader: () => {
+      // return data from here
+      return { records: await getSomeRecords() };
+    },
+    Component: MyRoute,
+  },
+]);
+```
+
+----------------------------------------
+
+TITLE: Defining a Resource Route for PDF Generation in TypeScript
+DESCRIPTION: This snippet demonstrates how to create a resource route that generates and serves a PDF file. It uses an async loader function to fetch a report, generate a PDF, and return it as a Response object.
+SOURCE: https://github.com/remix-run/react-router/blob/main/docs/how-to/resource-routes.md#2025-04-19_snippet_0
+
+LANGUAGE: typescript
+CODE:
+```
+import type { Route } from "./+types/pdf-report";
+
+export async function loader({ params }: Route.LoaderArgs) {
+  const report = await getReport(params.id);
+  const pdf = await generateReportPDF(report);
+  return new Response(pdf, {
+    status: 200,
+    headers: {
+      "Content-Type": "application/pdf",
+    },
+  });
+}
+```
