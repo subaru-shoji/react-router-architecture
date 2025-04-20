@@ -149,15 +149,9 @@
 6. ページコンポーネントの実装(`/app/routes`)
 
 ### 7.3 コード例の参照先
-- ドメインモデル例:`/app/domain/model/user.ts`
-- リポジトリ例:
-  - インターフェース:`/app/domain/repository/i_user_query_repository.ts`
-  - 実装:`/app/infrastructure/repository/drizzle_user_query_repository.ts`
-- ユースケース例:`/app/application/use_case/user/create_user_use_case.ts`
-- UIコンポーネント例:`/app/ui/component/Button.tsx`
 - ページコンポーネント例:`/app/routes/user/UserCreatePage.tsx`
 
-### 7.4 よくある実装パターン
+### 7.３ よくある実装パターン
 - 新規作成機能:`create_user_use_case.ts`を参考に
 - 詳細表示機能:`get_user_use_case.ts`を参考に
 - 一覧表示機能:`get_all_user_use_case.ts`を参考に
